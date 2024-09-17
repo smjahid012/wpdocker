@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+
+  database:
+    # We use a mariadb image which supports both amd64 & arm64 architecture
+    #image: mariadb:10.6.4-focal
+    image: mysql:latest
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+    volumes:
+     # - mysql-data:/var/lib/mysql
+       - ./mysql:/var/lib/mysql #mapping done 
+    networks:
+      - wordpress-network
+    deploy:
+      resources:
+        limits:
+          memory: 2048m
+
+  phpmyadmin:
+    depends_on:
+      - database
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8081:80   #here 8081 is my address(locsalhost:8081) and 80 is the container port
+    env_file: .env
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+    networks:
+      - wordpress-network
+
+  wordpress:
+    depends_on:
+      - database
+    image: wordpress:latest
+    restart: unless-stopped
+    ports:
+      - 9000:80
+    env_file: .env
+    environment:
+      WORDPRESS_DB_HOST: database:3306 # use the same name as database service or we can replace it with database:3306
+      WORDPRESS_DB_NAME: '${MYSQL_DATABASE}'
+      WORDPRESS_DB_USER: '${MYSQL_USER}'
+      WORDPRESS_DB_PASSWORD: '${MYSQL_PASSWORD}'
+    volumes:
+    #  - ./wp-content:/var/www/html/wp-content #only show wp-content,, its called volume mapping
+       - ./:/var/www/html/ #all files show on vscode
+    networks:
+      - wordpress-network
+
+volumes:
+  mysql-data:
+
+networks:
+  wordpress-network:
+    driver: bridge  
