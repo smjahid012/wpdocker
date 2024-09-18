@@ -57,6 +57,7 @@ services:
        - ./:/var/www/html/ #all files show on vscode
     networks:
       - wordpress-network
+    user: "www-data" 
 
 volumes:
   mysql-data:
@@ -64,3 +65,12 @@ volumes:
 networks:
   wordpress-network:
     driver: bridge  
+
+
+
+#### File Permission Neede plugin not delete
+# docker exec -it container_name /bin/bash
+#chmod -R 755 /var/www/html
+#chown -R www-data:www-data /var/www/html
+####
+
