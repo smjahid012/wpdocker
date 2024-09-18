@@ -1,3 +1,14 @@
 Wordpress With Docker 
 Basic Development Environment..
 For Faster Working.
+
+//add mysql to gitignore
+touch .gitignore
+nano .gitignore
+under nano /mysql/
+git check-ignore -v mysql/*
+#as already added mysql to git so cache remove
+git rm -r --cached mysql/ 
+git add .gitignore
+git commit -m "Add mysql folder to .gitignore"
+in order to check status: git status
