@@ -12,3 +12,14 @@ git rm -r --cached mysql/
 git add .gitignore
 git commit -m "Add mysql folder to .gitignore"
 in order to check status: git status
+
+File Permission: 
+docker exec -it container_name /bin/bash
+
+if add www-data as user on the docker-compose
+chmod -R 755 /var/www/html/wp-content
+chown -R www-data:www-data /var/www/html/wp-content 
+
+if not then root is smadmin or anyuser:
+sudo chmod 755 /home/smadmin/dockers/wpdocker/wp-content
+sudo chown -R smadmin:smadmin /home/smadmin/dockers/wpdocker/wp-content
